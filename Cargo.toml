@@ -1,0 +1,21 @@
+[package]
+name = "RustBerryOS"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alice Carra <aalicecarra@gmail.com>"]
+
+[profile.release]
+lto = true
+
+[features]
+default = []
+bsp_rpi3 = []
+bsp_rpi4 = []
+
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
