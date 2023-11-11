@@ -1,6 +1,6 @@
 [package]
 name = "RustBerryOS"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
 authors = ["Alice Carra <aalicecarra@gmail.com>"]
 
@@ -9,8 +9,8 @@ lto = true
 
 [features]
 default = []
-bsp_rpi3 = []
-bsp_rpi4 = []
+bsp_rpi3 = ["tock-registers"]
+bsp_rpi4 = ["tock-registers"]
 
 [[bin]]
 name = "kernel"
@@ -19,6 +19,9 @@ path = "src/main.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+# Optional dependencies
+tock-registers = { version = "0.8.x", default-features = false, features = ["register_types"], optional = true }
 
 [target.'cfg(target_arch = "aarch64")'.dependencies]
 aarch64-cpu = { version = "9.x.x" }

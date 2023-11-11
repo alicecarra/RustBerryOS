@@ -4,9 +4,10 @@ version = 3
 
 [[package]]
 name = "RustBerryOS"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "aarch64-cpu",
+ "tock-registers",
 ]
 
 [[package]]
