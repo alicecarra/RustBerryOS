@@ -16,3 +16,5 @@ target/
 # Added by cargo
 
 /target
+
+*.img
