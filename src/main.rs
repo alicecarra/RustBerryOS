@@ -28,23 +28,41 @@ unsafe fn kernel_init() -> ! {
 fn kernel_main() -> ! {
     use console::console;
 
-    println!(
-        "[0] {} version {}",
-        env!("CARGO_PKG_NAME"),
-        env!("CARGO_PKG_VERSION")
-    );
-    println!("[1] Booting on: {}", bsp::board_name());
+    println!("Loading Kernel via UART");
+    println!("{:^37}", bsp::board_name());
+    println!();
+    println!("[ML] Requesting binary");
+    console().flush();
 
-    println!("[2] Drivers loaded:");
-    driver::driver_manager().enumerate();
-
-    println!("[3] Chars written: {}", console().chars_written());
-    println!("[4] Echoing input now");
-
-    // Discard any spurious received characters before going into echo mode.
+    // Discard any spurious received characters before starting with the loader protocol.
     console().clear_rx();
-    loop {
-        let c = console().read_char();
-        console().write_char(c);
+
+    // Notify to send the binary.
+    for _ in 0..3 {
+        console().write_char(3 as char);
     }
+
+    let mut size: u32 = u32::from(console().read_char() as u8);
+    size |= u32::from(console().read_char() as u8) << 8;
+    size |= u32::from(console().read_char() as u8) << 16;
+    size |= u32::from(console().read_char() as u8) << 24;
+
+    console().write_char('O');
+    console().write_char('K');
+
+    let kernel_addr: *mut u8 = bsp::memory::board_default_load_addr() as *mut u8;
+    unsafe {
+        for i in 0..size {
+            core::ptr::write_volatile(kernel_addr.offset(i as isize), console().read_char() as u8)
+        }
+    }
+
+    println!("[Loader] Loaded! Executing the payload now\n");
+    console().flush();
+
+    // Use black magic to create a function pointer.
+    let kernel: fn() -> ! = unsafe { core::mem::transmute(kernel_addr) };
+
+    // Jump to loaded kernel!
+    kernel()
 }
