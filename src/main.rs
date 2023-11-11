@@ -9,6 +9,7 @@ mod console;
 mod cpu;
 mod panic;
 mod print;
+mod synchronization;
 
 unsafe fn kernel_init() -> ! {
     println!("Hello from Rust!");
