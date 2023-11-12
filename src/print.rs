@@ -27,7 +27,7 @@ macro_rules! info {
         let timestamp = $crate::time::time_manager().uptime();
 
         $crate::print::_print(format_args_nl!(
-            concat!("[  {:>3}.{:06}] ", $string),
+            concat!("[{:>3}.{:06}] ", $string),
             timestamp.as_secs(),
             timestamp.subsec_micros(),
         ));
@@ -36,7 +36,7 @@ macro_rules! info {
         let timestamp = $crate::time::time_manager().uptime();
 
         $crate::print::_print(format_args_nl!(
-            concat!("[  {:>3}.{:06}] ", $format_string),
+            concat!("[{:>3}.{:06}] ", $format_string),
             timestamp.as_secs(),
             timestamp.subsec_micros(),
             $($arg)*
